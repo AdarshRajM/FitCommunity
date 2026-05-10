@@ -16,10 +16,7 @@ COPY . .
 
 RUN composer install
 
-RUN npm install && npm run build
-
-RUN php artisan key:generate
-
+RUN npm install --legacy-peer-deps && npm run build
 EXPOSE 10000
 
 CMD php artisan serve --host=0.0.0.0 --port=10000
