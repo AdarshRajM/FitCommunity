@@ -12,54 +12,43 @@ class BlogController extends Controller
      */
     public function index()
     {
-        //
+        $blogs = Blog::latest()->paginate(9);
+        return view('blogs.index', compact('blogs'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return view('blogs.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'category' => 'required|string|max:100',
+            'content' => 'required|string',
+            'video' => 'nullable|mimetypes:video/avi,video/mpeg,video/quicktime,video/mp4|max:51200',
+        ]);
+
+        $videoPath = null;
+        if ($request->hasFile('video')) {
+            $videoPath = $request->file('video')->store('public/blogs/videos');
+            $videoPath = basename($videoPath);
+        }
+
+        Blog::create([
+            'title' => $request->title,
+            'category' => $request->category,
+            'content' => $request->content,
+            'video_path' => $videoPath,
+            // Assuming auth user is author if no specific author column
+        ]);
+
+        return redirect()->route('blogs.index')->with('success', 'Blog article published!');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Blog $blog)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Blog $blog)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Blog $blog)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Blog $blog)
-    {
-        //
+        return view('blogs.show', compact('blog'));
     }
 }

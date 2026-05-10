@@ -24,7 +24,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role',
+        'role_id',
         'avatar',
         'is_active',
     ];
@@ -62,11 +62,35 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the user's role.
+     */
+    public function role(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Role::class);
+    }
+
+    /**
      * Get the user's posts.
      */
     public function posts(): HasMany
     {
         return $this->hasMany(Post::class);
+    }
+
+    /**
+     * Get the user's comments.
+     */
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    /**
+     * Get the user's likes.
+     */
+    public function likes(): HasMany
+    {
+        return $this->hasMany(Like::class);
     }
 
     /**
@@ -130,7 +154,15 @@ class User extends Authenticatable
      */
     public function isAdmin(): bool
     {
-        return $this->role === 'admin';
+        return $this->role_id == 1; // 1 = Admin
+    }
+
+    /**
+     * Check if user is user.
+     */
+    public function isUser(): bool
+    {
+        return $this->role_id == 2; // 2 = User
     }
 
     /**
@@ -138,7 +170,7 @@ class User extends Authenticatable
      */
     public function isDoctor(): bool
     {
-        return $this->role === 'doctor';
+        return $this->role_id == 3; // 3 = Doctor
     }
 
     /**
@@ -146,7 +178,7 @@ class User extends Authenticatable
      */
     public function isTrainer(): bool
     {
-        return $this->role === 'trainer';
+        return $this->role_id == 4; // 4 = Trainer
     }
 
     /**

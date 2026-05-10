@@ -24,6 +24,13 @@ class Profile extends Model
         'emergency_contact',
         'emergency_phone',
         'preferences',
+        'blood_group',
+        'skin_color',
+        'medical_history',
+        'allergies',
+        'emergency_contact_name',
+        'emergency_contact_phone',
+        'profile_picture',
     ];
 
     protected $casts = [

@@ -34,12 +34,26 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'date_of_birth' => ['required', 'date'],
+            'height' => ['required', 'numeric', 'min:50', 'max:300'], // cm
+            'weight' => ['required', 'numeric', 'min:20', 'max:500'], // kg
+            'blood_group' => ['required', 'string', 'max:10'],
+            'skin_color' => ['required', 'string', 'max:50'],
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+        ]);
+
+        \App\Models\Profile::create([
+            'user_id' => $user->id,
+            'date_of_birth' => $request->date_of_birth,
+            'height' => $request->height,
+            'weight' => $request->weight,
+            'blood_group' => $request->blood_group,
+            'skin_color' => $request->skin_color,
         ]);
 
         event(new Registered($user));

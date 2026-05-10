@@ -24,15 +24,45 @@ class ProfileController extends Controller
     /**
      * Update the user's profile information.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function update(ProfileUpdateRequest $request)
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
+        $validated = $request->validated();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        $user->fill([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+        ]);
+
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
         }
 
-        $request->user()->save();
+        // Handle Avatar / Profile Picture Upload
+        if ($request->hasFile('avatar')) {
+            if ($user->avatar) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($user->avatar);
+            }
+            $avatarPath = $request->file('avatar')->store('avatars', 'public');
+            $user->avatar = $avatarPath;
+            // Also store in profile if needed
+            $validated['profile_picture'] = $avatarPath;
+        }
+
+        $user->save();
+
+        // Update or Create Profile
+        $profileData = collect($validated)->except(['name', 'email', 'avatar'])->toArray();
+        if (!empty($profileData)) {
+            $user->profile()->updateOrCreate(
+                ['user_id' => $user->id],
+                $profileData
+            );
+        }
+
+        if ($request->expectsJson()) {
+            return response()->json(['message' => 'Profile updated successfully!', 'user' => $user->load('profile')]);
+        }
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }

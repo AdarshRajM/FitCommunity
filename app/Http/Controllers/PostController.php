@@ -17,11 +17,40 @@ class PostController extends Controller
      */
     public function index(Request $request)
     {
-        $posts = Post::with(['user', 'comments', 'likes'])
+        $query = Post::with(['user', 'comments', 'likes'])
             ->where('is_published', true)
-            ->where('is_approved', true)
-            ->latest()
-            ->paginate(10);
+            ->where('is_approved', true);
+
+        // Handle Search Query
+        if ($request->filled('query')) {
+            $searchTerm = $request->input('query');
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('title', 'like', "%{$searchTerm}%")
+                  ->orWhere('content', 'like', "%{$searchTerm}%");
+            });
+        }
+
+        // Handle Category/Hashtag Filter
+        if ($request->filled('category')) {
+            $category = $request->input('category');
+            // Assuming we match category against hashtags (stored as JSON array)
+            $query->whereJsonContains('hashtags', $category);
+        }
+
+        // Handle Sorting
+        if ($request->filled('sort')) {
+            if ($request->sort === 'oldest') {
+                $query->oldest();
+            } elseif ($request->sort === 'popular') {
+                $query->withCount('likes')->orderByDesc('likes_count');
+            } else {
+                $query->latest();
+            }
+        } else {
+            $query->latest();
+        }
+
+        $posts = $query->paginate(10)->withQueryString();
 
         return view('community.index', compact('posts'));
     }
@@ -58,6 +87,18 @@ class PostController extends Controller
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('public/posts/images');
             $imagePath = basename($imagePath);
+        } elseif ($request->filled('camera_image')) {
+            // Handle base64 image from camera
+            $imageParts = explode(";base64,", $request->camera_image);
+            if (count($imageParts) == 2) {
+                $imageTypeAux = explode("image/", $imageParts[0]);
+                $imageType = $imageTypeAux[1];
+                $imageBase64 = base64_decode($imageParts[1]);
+                $fileName = uniqid() . '.png';
+                
+                Storage::put('public/posts/images/' . $fileName, $imageBase64);
+                $imagePath = $fileName;
+            }
         }
 
         if ($request->hasFile('video')) {
@@ -232,40 +273,5 @@ class PostController extends Controller
         $comment->delete();
 
         return back()->with('success', 'Comment deleted successfully!');
-    }
-}
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Post $post)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Post $post)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Post $post)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Post $post)
-    {
-        //
     }
 }

@@ -2,64 +2,61 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Appointment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AppointmentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $appointments = Appointment::where('user_id', Auth::id())
+            ->orWhere('doctor_id', Auth::id())
+            ->orderBy('appointment_date', 'asc')
+            ->get();
+            
+        $doctors = User::whereIn('role', ['doctor', 'trainer'])->get();
+
+        return view('appointments.index', compact('appointments', 'doctors'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'doctor_id' => 'required|exists:users,id',
+            'title' => 'required|string|max:255',
+            'appointment_date' => 'required|date|after:now',
+            'duration' => 'required|integer|in:30,60,90',
+            'notes' => 'nullable|string',
+        ]);
+
+        Appointment::create([
+            'user_id' => Auth::id(),
+            'doctor_id' => $request->doctor_id,
+            'title' => $request->title,
+            'appointment_date' => $request->appointment_date,
+            'duration' => $request->duration,
+            'notes' => $request->notes,
+            'status' => 'pending',
+        ]);
+
+        return redirect()->route('appointments.index')->with('success', 'Appointment booked successfully! Waiting for confirmation.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Appointment $appointment)
+    public function updateStatus(Request $request, Appointment $appointment)
     {
-        //
-    }
+        // Only the doctor can confirm/complete/cancel
+        if (Auth::id() !== $appointment->doctor_id && Auth::id() !== $appointment->user_id) {
+            abort(403);
+        }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Appointment $appointment)
-    {
-        //
-    }
+        $request->validate([
+            'status' => 'required|in:pending,confirmed,completed,cancelled',
+        ]);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Appointment $appointment)
-    {
-        //
-    }
+        $appointment->update(['status' => $request->status]);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Appointment $appointment)
-    {
-        //
+        return back()->with('success', 'Appointment status updated.');
     }
 }
