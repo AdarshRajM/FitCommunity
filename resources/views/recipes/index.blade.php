@@ -17,9 +17,9 @@
                     <span class="bg-white/20 px-3 py-1 rounded-full text-sm font-semibold tracking-wider mb-4 inline-block">NUTRITION HUB</span>
                     <h3 class="text-4xl font-extrabold mb-4 leading-tight">Fuel Your Body. <br/>Achieve Your Goals.</h3>
                     <p class="text-emerald-50 mb-6 text-lg">Discover macro-friendly recipes shared by the FitCommunity. Filter by diet type and calories to find your perfect meal.</p>
-                    <button class="bg-white text-green-600 px-8 py-3 rounded-full font-bold shadow-lg hover:shadow-xl transition transform hover:-translate-y-1">
+                    <a href="{{ url('/community') }}" class="inline-block bg-white text-green-600 px-8 py-3 rounded-full font-bold shadow-lg hover:shadow-xl transition transform hover:-translate-y-1">
                         Share a Recipe
-                    </button>
+                    </a>
                 </div>
                 <!-- 3D Canvas Container -->
                 <div id="food-3d-canvas" class="w-full md:w-1/2 h-64 relative z-10 mt-8 md:mt-0"></div>
@@ -140,7 +140,7 @@
                     <p class="text-sm text-blue-600 dark:text-blue-400 font-bold">6,800 / 10,000 Liters consumed today</p>
                 </div>
                 <div class="w-full md:w-1/3 text-center">
-                    <button class="bg-blue-500 hover:bg-blue-600 text-white px-8 py-4 rounded-xl font-bold shadow-lg transition transform hover:scale-105">
+                    <button onclick="alert('Great job! 0.25L of water has been logged to your daily intake. Keep hydrating!'); window.dispatchEvent(new CustomEvent('open-ai-chat', { detail: 'I just drank a glass of water, log 0.25L for me.' }))" class="bg-blue-500 hover:bg-blue-600 text-white px-8 py-4 rounded-xl font-bold shadow-lg transition transform hover:scale-105">
                         Log My Glass (+0.25L)
                     </button>
                 </div>

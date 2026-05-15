@@ -19,4 +19,4 @@ RUN composer install
 RUN npm install --legacy-peer-deps && npm run build
 EXPOSE 10000
 
-CMD php artisan serve --host=0.0.0.0 --port=10000
+CMD sh -c "php artisan serve --host=0.0.0.0 --port=${PORT:-10000}"

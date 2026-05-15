@@ -13,7 +13,13 @@
                 <div class="relative z-10 text-white w-full md:w-2/3">
                     <span class="bg-white/20 px-3 py-1 rounded-full text-xs font-bold tracking-wider mb-4 inline-block">HEALTHCARE CONNECT</span>
                     <h2 class="text-3xl md:text-4xl font-extrabold mb-4 leading-tight">Expert Consultations, <br/> Anytime, Anywhere.</h2>
-                    <p class="text-blue-100 text-lg max-w-lg">Book appointments with top-rated fitness trainers and medical professionals. Manage your schedule seamlessly.</p>
+                    <p class="text-blue-100 text-lg">Connect with certified health professionals or consult our AI Doctor for quick advice.</p>
+                <div class="mt-6 flex gap-4">
+                    <button onclick="window.dispatchEvent(new CustomEvent('open-ai-chat'))" class="bg-white text-blue-600 px-6 py-3 rounded-full font-bold shadow-lg hover:shadow-xl transition transform hover:-translate-y-1 flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        Ask AI Doctor Now
+                    </button>
+                </div>
                 </div>
                 <div class="hidden md:block relative z-10 opacity-80">
                     <svg class="w-32 h-32 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
@@ -43,7 +49,7 @@
                         <span>•</span>
                         <span>8 Spots Left</span>
                     </div>
-                    <button class="w-full bg-green-50 text-green-600 border border-green-200 hover:bg-green-600 hover:text-white px-4 py-2 rounded-xl font-medium transition">Join Group Session</button>
+                    <button onclick="alert('Joining Yoga for Beginners session...')" class="w-full bg-green-50 text-green-600 border border-green-200 hover:bg-green-600 hover:text-white px-4 py-2 rounded-xl font-medium transition">Join Group Session</button>
                 </div>
 
                 <!-- Session 2 -->
@@ -79,7 +85,7 @@
                         <span>•</span>
                         <span>12 Spots Left</span>
                     </div>
-                    <button class="w-full bg-purple-50 text-purple-600 border border-purple-200 hover:bg-purple-600 hover:text-white px-4 py-2 rounded-xl font-medium transition">Join Group Session</button>
+                    <button onclick="alert('Joining Mental Wellness Circle...')" class="w-full bg-purple-50 text-purple-600 border border-purple-200 hover:bg-purple-600 hover:text-white px-4 py-2 rounded-xl font-medium transition">Join Group Session</button>
                 </div>
             </div>
         </div>

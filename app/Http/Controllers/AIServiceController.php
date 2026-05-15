@@ -170,6 +170,7 @@ class AIServiceController extends Controller
         $baseContext .= "Always provide your answers in a highly structured, clean format using bullet points where necessary. Include a strong disclaimer that you are an AI, not a human doctor. ";
         $baseContext .= "IMPORTANT: Always detect the language of the user's message (e.g., Hindi, English, Spanish) and respond fluently in exactly that same language. ";
         $baseContext .= "When giving any medical or medicine-related advice, firmly state the precautions and side effects, and insist they consult a human doctor before taking any medication. ";
+        $baseContext .= "Do not repeat the exact same phrases for every answer. Be conversational, direct, and insightful. ";
 
         if ($mode === 'symptoms') {
             return $baseContext . "The user is using the Symptom Checker. They report: '{$userMessage}'. Please provide possible causes, basic precautions to take at home, and clearly state when they should consult a human doctor.";
@@ -192,7 +193,7 @@ class AIServiceController extends Controller
         }
 
         if ($mode === 'report') {
-            return $baseContext . "The user has uploaded a medical report or photo with the message: '{$userMessage}'. Please analyze the image. Explain the medical jargon in simple terms so the patient can understand their report or condition, and advise them to discuss it with their doctor.";
+            return $baseContext . "The user has uploaded a medical document (like a blood test report, MRI, PDF, or medical photo) with the message: '{$userMessage}'. PLEASE CAREFULLY EXTRACT AND READ ALL TEXT AND DATA FROM THE DOCUMENT. Analyze the numerical values and medical markers against standard normal ranges. Explain the medical jargon in simple terms so the patient can clearly understand their condition. Explicitly highlight any abnormal, high, or low values and what they might indicate. Finally, strongly advise them to discuss these specific findings with their doctor. Do not just reply with a generic acknowledgment; you MUST provide a detailed, accurate breakdown of the report's actual contents.";
         }
 
         return $baseContext . "The user asks: '{$userMessage}'. Provide a helpful, health-focused answer, explaining details well.";

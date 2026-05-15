@@ -80,7 +80,7 @@
                                     <img class="w-8 h-8 rounded-full border border-[#0b1121]" src="https://i.pravatar.cc/100?img=14" alt="Avatar">
                                 </div>
                             </div>
-                            <button class="bg-cyan-500/20 hover:bg-cyan-500 text-cyan-300 hover:text-white px-6 py-3 rounded-xl font-medium transition">
+                            <button onclick="alert('Successfully joined the Morning Mindfulness room!');" class="bg-cyan-500/20 hover:bg-cyan-500 text-cyan-300 hover:text-white px-6 py-3 rounded-xl font-medium transition">
                                 Join Room
                             </button>
                         </div>
@@ -94,7 +94,7 @@
                                     <img class="w-8 h-8 rounded-full border border-[#0b1121]" src="https://i.pravatar.cc/100?img=23" alt="Avatar">
                                 </div>
                             </div>
-                            <button class="bg-purple-500/20 hover:bg-purple-500 text-purple-300 hover:text-white px-6 py-3 rounded-xl font-medium transition">
+                            <button onclick="alert('RSVP Confirmed! We will notify you before the session starts.');" class="bg-purple-500/20 hover:bg-purple-500 text-purple-300 hover:text-white px-6 py-3 rounded-xl font-medium transition">
                                 RSVP
                             </button>
                         </div>
