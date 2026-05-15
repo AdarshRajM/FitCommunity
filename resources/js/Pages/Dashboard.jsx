@@ -369,8 +369,6 @@ export default function Dashboard({ user, healthData }) {
                                                 <option value="Low">😢 Low</option>
                                             </select>
                                         </div>
-                                    </div>
-
                                     <button type="submit" className="w-full mt-6 py-3 rounded-xl bg-gradient-to-r from-[#4CAF50] to-[#2196F3] text-sm font-medium hover:opacity-90 transition-opacity text-white">
                                         Save Metrics
                                     </button>
