@@ -51,18 +51,18 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200 dark:divide-gray-800">
+                        @forelse($records as $record)
                         <tr class="hover:bg-gray-50 dark:hover:bg-[#1e293b]/50 transition">
-                            <td class="p-4 text-gray-900 dark:text-white font-medium">Today</td>
-                            <td class="p-4 text-gray-500 dark:text-gray-400">75 kg</td>
-                            <td class="p-4 text-gray-500 dark:text-gray-400">8,500</td>
-                            <td class="p-4 text-gray-500 dark:text-gray-400">2,100 kcal</td>
+                            <td class="p-4 text-gray-900 dark:text-white font-medium">{{ \Carbon\Carbon::parse($record->record_date)->format('M d, Y') }}</td>
+                            <td class="p-4 text-gray-500 dark:text-gray-400">{{ $record->weight ?? '-' }} kg</td>
+                            <td class="p-4 text-gray-500 dark:text-gray-400">{{ number_format($record->steps ?? 0) }}</td>
+                            <td class="p-4 text-gray-500 dark:text-gray-400">{{ number_format($record->calories_burned ?? 0) }} kcal</td>
                         </tr>
-                        <tr class="hover:bg-gray-50 dark:hover:bg-[#1e293b]/50 transition">
-                            <td class="p-4 text-gray-900 dark:text-white font-medium">Yesterday</td>
-                            <td class="p-4 text-gray-500 dark:text-gray-400">75.2 kg</td>
-                            <td class="p-4 text-gray-500 dark:text-gray-400">10,200</td>
-                            <td class="p-4 text-gray-500 dark:text-gray-400">2,500 kcal</td>
+                        @empty
+                        <tr>
+                            <td colspan="4" class="p-4 text-gray-500 dark:text-gray-400 text-center">No health records found. Start logging your metrics on the dashboard!</td>
                         </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>

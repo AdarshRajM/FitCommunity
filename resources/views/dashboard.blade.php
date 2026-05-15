@@ -16,6 +16,13 @@
         @viteReactRefresh
         @vite(['resources/css/app.css', 'resources/js/app.jsx'])
     @endif
+    <script>
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
 </head>
 <body class="antialiased bg-[#0f172a]">
     <div id="react-dashboard" data-user='{{ json_encode(Auth::user()) }}' data-health='{{ json_encode($dashboardData ?? []) }}'></div>

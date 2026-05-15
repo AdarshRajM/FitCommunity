@@ -29,36 +29,38 @@ class ProfileController extends Controller
         $user = $request->user();
         $validated = $request->validated();
 
-        $user->fill([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-        ]);
+        \Illuminate\Support\Facades\DB::transaction(function () use ($user, $validated, $request) {
+            $user->fill([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+            ]);
 
-        if ($user->isDirty('email')) {
-            $user->email_verified_at = null;
-        }
-
-        // Handle Avatar / Profile Picture Upload
-        if ($request->hasFile('avatar')) {
-            if ($user->avatar) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($user->avatar);
+            if ($user->isDirty('email')) {
+                $user->email_verified_at = null;
             }
-            $avatarPath = $request->file('avatar')->store('avatars', 'public');
-            $user->avatar = $avatarPath;
-            // Also store in profile if needed
-            $validated['profile_picture'] = $avatarPath;
-        }
 
-        $user->save();
+            // Handle Avatar / Profile Picture Upload
+            if ($request->hasFile('avatar')) {
+                if ($user->avatar) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($user->avatar);
+                }
+                $avatarPath = $request->file('avatar')->store('avatars', 'public');
+                $user->avatar = $avatarPath;
+                // Also store in profile if needed
+                $validated['profile_picture'] = $avatarPath;
+            }
 
-        // Update or Create Profile
-        $profileData = collect($validated)->except(['name', 'email', 'avatar'])->toArray();
-        if (!empty($profileData)) {
-            $user->profile()->updateOrCreate(
-                ['user_id' => $user->id],
-                $profileData
-            );
-        }
+            $user->save();
+
+            // Update or Create Profile
+            $profileData = collect($validated)->except(['name', 'email', 'avatar'])->toArray();
+            if (!empty($profileData)) {
+                $user->profile()->updateOrCreate(
+                    ['user_id' => $user->id],
+                    $profileData
+                );
+            }
+        });
 
         if ($request->expectsJson()) {
             return response()->json(['message' => 'Profile updated successfully!', 'user' => $user->load('profile')]);

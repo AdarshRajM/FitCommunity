@@ -38,23 +38,25 @@ class RegisteredUserController extends Controller
             'height' => ['required', 'numeric', 'min:50', 'max:300'], // cm
             'weight' => ['required', 'numeric', 'min:20', 'max:500'], // kg
             'blood_group' => ['required', 'string', 'max:10'],
-            'skin_color' => ['required', 'string', 'max:50'],
         ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        $user = \Illuminate\Support\Facades\DB::transaction(function () use ($request) {
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
 
-        \App\Models\Profile::create([
-            'user_id' => $user->id,
-            'date_of_birth' => $request->date_of_birth,
-            'height' => $request->height,
-            'weight' => $request->weight,
-            'blood_group' => $request->blood_group,
-            'skin_color' => $request->skin_color,
-        ]);
+            \App\Models\Profile::create([
+                'user_id' => $user->id,
+                'date_of_birth' => $request->date_of_birth,
+                'height' => $request->height,
+                'weight' => $request->weight,
+                'blood_group' => $request->blood_group,
+            ]);
+
+            return $user;
+        });
 
         event(new Registered($user));
 

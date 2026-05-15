@@ -37,7 +37,6 @@ class ProfileUpdateRequest extends FormRequest
             'height' => ['nullable', 'numeric', 'min:0'],
             'weight' => ['nullable', 'numeric', 'min:0'],
             'blood_group' => ['nullable', 'string', 'max:10'],
-            'skin_color' => ['nullable', 'string', 'max:50'],
             'medical_history' => ['nullable', 'string', 'max:2000'],
             'allergies' => ['nullable', 'string', 'max:1000'],
             'emergency_contact_name' => ['nullable', 'string', 'max:255'],

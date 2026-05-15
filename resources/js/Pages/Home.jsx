@@ -27,8 +27,14 @@ export default function Home() {
                     </div>
 
                     <div className="flex gap-4 items-center">
-                        <a href="/login" className="text-slate-300 hover:text-white font-medium text-sm transition-colors">Log in</a>
-                        <a href="/register" className="bg-gradient-to-r from-[#4CAF50] to-[#2b9d50] hover:scale-105 transition-transform px-6 py-2 rounded-full font-medium text-sm shadow-lg shadow-green-500/30 text-white">Join Now</a>
+                        {document.getElementById('react-home')?.dataset?.auth === 'true' ? (
+                            <a href="/dashboard" className="bg-gradient-to-r from-[#4CAF50] to-[#2b9d50] hover:scale-105 transition-transform px-6 py-2 rounded-full font-medium text-sm shadow-lg shadow-green-500/30 text-white">Go to Dashboard</a>
+                        ) : (
+                            <>
+                                <a href="/login" className="text-slate-300 hover:text-white font-medium text-sm transition-colors">Log in</a>
+                                <a href="/register" className="bg-gradient-to-r from-[#4CAF50] to-[#2b9d50] hover:scale-105 transition-transform px-6 py-2 rounded-full font-medium text-sm shadow-lg shadow-green-500/30 text-white">Join Now</a>
+                            </>
+                        )}
                     </div>
                 </div>
             </nav>
@@ -54,10 +60,17 @@ export default function Home() {
                             Join our advanced digital wellness community. Connect with peers, consult our AI Doctor, and achieve your health goals in a stunning interactive environment.
                         </p>
                         <div className="flex flex-wrap gap-4">
-                            <a href="/register" className="group bg-gradient-to-r from-[#4CAF50] to-[#2b9d50] hover:from-[#45a049] hover:to-[#228642] px-8 py-3.5 rounded-full font-semibold text-lg flex items-center gap-2 transition-all shadow-xl shadow-green-500/25 hover:shadow-green-500/40 transform hover:-translate-y-1">
-                                Start Your Journey
-                                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                            </a>
+                            {document.getElementById('react-home')?.dataset?.auth === 'true' ? (
+                                <a href="/dashboard" className="group bg-gradient-to-r from-[#4CAF50] to-[#2b9d50] hover:from-[#45a049] hover:to-[#228642] px-8 py-3.5 rounded-full font-semibold text-lg flex items-center gap-2 transition-all shadow-xl shadow-green-500/25 hover:shadow-green-500/40 transform hover:-translate-y-1">
+                                    Go to Dashboard
+                                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                                </a>
+                            ) : (
+                                <a href="/register" className="group bg-gradient-to-r from-[#4CAF50] to-[#2b9d50] hover:from-[#45a049] hover:to-[#228642] px-8 py-3.5 rounded-full font-semibold text-lg flex items-center gap-2 transition-all shadow-xl shadow-green-500/25 hover:shadow-green-500/40 transform hover:-translate-y-1">
+                                    Start Your Journey
+                                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                                </a>
+                            )}
                             <a href="#features" className="px-8 py-3.5 rounded-full font-semibold text-lg border border-slate-600 hover:bg-slate-800/50 hover:border-slate-400 transition-all backdrop-blur-sm">
                                 Explore Features
                             </a>

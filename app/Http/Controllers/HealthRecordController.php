@@ -74,6 +74,20 @@ class HealthRecordController extends Controller
     }
 
     /**
+     * Display the health history for the user.
+     */
+    public function history()
+    {
+        $user = Auth::user();
+        
+        $records = HealthRecord::where('user_id', $user->id)
+            ->orderBy('record_date', 'desc')
+            ->get();
+            
+        return view('health.history', compact('records'));
+    }
+
+    /**
      * Store a newly created health record in storage.
      */
     public function store(Request $request)
@@ -84,6 +98,8 @@ class HealthRecordController extends Controller
             'water_intake' => ['nullable', 'numeric', 'min:0'],
             'sleep_hours' => ['nullable', 'numeric', 'min:0', 'max:24'],
             'weight' => ['nullable', 'numeric', 'min:0'],
+            'height' => ['nullable', 'numeric', 'min:0'],
+            'bmi' => ['nullable', 'numeric', 'min:0'],
         ]);
 
         $record = HealthRecord::firstOrNew([
@@ -98,6 +114,15 @@ class HealthRecordController extends Controller
         
         if ($request->weight) {
             $record->weight = $request->weight;
+        }
+        
+        // Use height and bmi directly if they are passed or save them if there is a column
+        // We will assume 'height' and 'bmi' columns exist or we will just use them in UI
+        if ($request->has('height') && \Schema::hasColumn('health_records', 'height')) {
+            $record->height = $request->height;
+        }
+        if ($request->has('bmi') && \Schema::hasColumn('health_records', 'bmi')) {
+            $record->bmi = $request->bmi;
         }
         
         $record->save();

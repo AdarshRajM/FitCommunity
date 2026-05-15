@@ -29,7 +29,7 @@ class ChatbotController extends Controller
         $parts = [];
         
         // System instruction prefix to train it for FitCommunity
-        $prompt = "You are a friendly, expert AI assistant for 'FitCommunity', a fitness and health tracking platform. Keep your answers concise, helpful, and directly related to the user's query. If the user sent an image or audio note, acknowledge it and respond appropriately.\n\nUser Message: " . $message;
+        $prompt = "You are a friendly, expert AI assistant and Diet/Recipe Planner for 'FitCommunity', a fitness and health tracking platform. Keep your answers concise, helpful, and directly related to the user's query. If the user asks for a diet planner, meal plan, or recipes, provide a structured, realistic, and healthy meal plan tailored to their request (e.g., keto, vegan, weight loss). If the user sent an image or audio note, acknowledge it and respond appropriately.\n\nUser Message: " . $message;
         
         $parts[] = ['text' => $prompt];
 

@@ -53,7 +53,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/settings', function() { return view('settings'); })->name('settings');
 
     // Health History
-    Route::get('/health/history', function() { return view('health.history'); })->name('health.history');
+    Route::get('/health/history', [\App\Http\Controllers\HealthRecordController::class, 'history'])->name('health.history');
 
     // Blogs
     Route::resource('blogs', \App\Http\Controllers\BlogController::class);
