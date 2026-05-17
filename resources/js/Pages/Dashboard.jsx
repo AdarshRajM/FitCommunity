@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import ThreeBackground from '../Components/ThreeBackground';
 import AIDoctor from '../Components/AIDoctor';
 import { motion } from 'framer-motion';
 import { Activity, Search, Heart, Moon, Flame, Sun, ArrowRight, Video, Stethoscope, Dumbbell, Coffee, Bell, Menu, X, Plus, Clock, FileText, CheckCircle, Brain, Calendar, LogOut, ChevronRight } from 'lucide-react';
@@ -141,10 +140,6 @@ export default function Dashboard({ user, healthData }) {
 
     return (
         <div className={`flex h-screen ${themeColors.bg} ${themeColors.text} overflow-hidden font-sans transition-colors duration-300`}>
-            {/* 3D Background - muted for dashboard */}
-            <div className="absolute inset-0 opacity-30 pointer-events-none">
-                <ThreeBackground />
-            </div>
 
             {/* Sidebar */}
             <motion.aside 

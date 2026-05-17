@@ -20,6 +20,13 @@ class AIServiceController extends Controller
         ]);
 
         $apiKey = env('GEMINI_API_KEY');
+        if (!$apiKey && file_exists(base_path('.env'))) {
+            $envContent = file_get_contents(base_path('.env'));
+            if (preg_match('/GEMINI_API_KEY=(.*)/', $envContent, $matches)) {
+                $apiKey = trim($matches[1]);
+            }
+        }
+        
         if (!$apiKey) {
             // Use Local Mock Engine if API key is not present to prevent "offline mode" error
             $reply = $this->runLocalMockEngine($request->mode, $request->message, $request->hasFile('image'));
