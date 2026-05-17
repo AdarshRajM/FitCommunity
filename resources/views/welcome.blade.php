@@ -12,10 +12,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     
     <!-- Styles / Scripts -->
-    @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-        @viteReactRefresh
-        @vite(['resources/css/app.css', 'resources/js/app.jsx'])
-    @endif
+    @viteReactRefresh
+    @vite(['resources/css/app.css', 'resources/js/app.jsx'])
     <script>
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
