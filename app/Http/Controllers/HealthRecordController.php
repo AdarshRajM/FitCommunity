@@ -118,10 +118,10 @@ class HealthRecordController extends Controller
         
         // Use height and bmi directly if they are passed or save them if there is a column
         // We will assume 'height' and 'bmi' columns exist or we will just use them in UI
-        if ($request->has('height') && \Schema::hasColumn('health_records', 'height')) {
+        if ($request->has('height')) {
             $record->height = $request->height;
         }
-        if ($request->has('bmi') && \Schema::hasColumn('health_records', 'bmi')) {
+        if ($request->has('bmi')) {
             $record->bmi = $request->bmi;
         }
         
