@@ -215,7 +215,7 @@ export default function Dashboard({ user, healthData }) {
                 </header>
 
                 {/* Dashboard Content */}
-                <div className="flex-1 overflow-y-auto p-8">
+                <div className="flex-1 overflow-y-auto p-8 pb-32">
                     <div className="max-w-6xl mx-auto space-y-8">
                         {/* Stats Grid */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
