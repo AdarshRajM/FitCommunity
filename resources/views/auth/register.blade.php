@@ -48,7 +48,7 @@
                 <!-- Date of Birth -->
                 <div>
                     <label for="date_of_birth" class="block text-sm font-medium text-slate-300 mb-2">Date of Birth</label>
-                    <input id="date_of_birth" class="block w-full px-4 py-3 bg-[#0f172a]/80 border border-slate-600 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#4CAF50] focus:border-transparent hover:border-slate-500 shadow-sm focus:shadow-[0_0_15px_rgba(76,175,80,0.2)] transition-all duration-300" type="date" name="date_of_birth" :value="old('date_of_birth')" required />
+                    <input id="date_of_birth" class="block w-full px-4 py-3 bg-[#0f172a]/80 border border-slate-600 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#4CAF50] focus:border-transparent hover:border-slate-500 shadow-sm focus:shadow-[0_0_15px_rgba(76,175,80,0.2)] transition-all duration-300 [color-scheme:dark]" type="date" name="date_of_birth" :value="old('date_of_birth')" required />
                     <x-input-error :messages="$errors->get('date_of_birth')" class="mt-2 text-red-400 text-sm" />
                 </div>
 

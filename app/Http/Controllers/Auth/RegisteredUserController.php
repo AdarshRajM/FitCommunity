@@ -40,23 +40,19 @@ class RegisteredUserController extends Controller
             'blood_group' => ['required', 'string', 'max:10'],
         ]);
 
-        $user = \Illuminate\Support\Facades\DB::transaction(function () use ($request) {
-            $user = User::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-            ]);
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
 
-            \App\Models\Profile::create([
-                'user_id' => $user->id,
-                'date_of_birth' => $request->date_of_birth,
-                'height' => $request->height,
-                'weight' => $request->weight,
-                'blood_group' => $request->blood_group,
-            ]);
-
-            return $user;
-        });
+        \App\Models\Profile::create([
+            'user_id' => $user->id,
+            'date_of_birth' => $request->date_of_birth,
+            'height' => $request->height,
+            'weight' => $request->weight,
+            'blood_group' => $request->blood_group,
+        ]);
 
         event(new Registered($user));
 
