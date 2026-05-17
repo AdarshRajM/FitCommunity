@@ -26,7 +26,8 @@ class AIServiceController extends Controller
             return response()->json(['reply' => $reply]);
         }
 
-        $prompt = $this->buildPrompt($request->mode, $request->message);
+        $userName = auth()->check() ? auth()->user()->name : 'Valued Member';
+        $prompt = $this->buildPrompt($request->mode, $request->message, $userName);
 
         try {
             if ($request->hasFile('image')) {
@@ -164,38 +165,39 @@ class AIServiceController extends Controller
         throw new \Exception('Failed to get response from Gemini Vision API.');
     }
 
-    private function buildPrompt($mode, $userMessage)
+    private function buildPrompt($mode, $userMessage, $userName = 'User')
     {
         $baseContext = "You are Fit AI, a highly advanced, empathetic, and professional AI Doctor and Health Assistant for the FitCommunity platform. ";
+        $baseContext .= "The user you are speaking to is named $userName. Greet them by their name occasionally to make the experience personal. ";
         $baseContext .= "Always provide your answers in a highly structured, clean format using bullet points where necessary. Include a strong disclaimer that you are an AI, not a human doctor. ";
         $baseContext .= "IMPORTANT: Always detect the language of the user's message (e.g., Hindi, English, Spanish) and respond fluently in exactly that same language. ";
         $baseContext .= "When giving any medical or medicine-related advice, firmly state the precautions and side effects, and insist they consult a human doctor before taking any medication. ";
         $baseContext .= "Do not repeat the exact same phrases for every answer. Be conversational, direct, and insightful. ";
 
         if ($mode === 'symptoms') {
-            return $baseContext . "The user is using the Symptom Checker. They report: '{$userMessage}'. Please provide possible causes, basic precautions to take at home, and clearly state when they should consult a human doctor.";
+            return $baseContext . "The user ($userName) is using the Symptom Checker. They report: '{$userMessage}'. Please provide possible causes, basic precautions to take at home, and clearly state when they should consult a human doctor.";
         }
 
         if ($mode === 'diet') {
-            return $baseContext . "The user is using the Diet Planner. They request: '{$userMessage}'. Please generate a concise, healthy daily meal plan and hydration suggestions based on their input.";
+            return $baseContext . "The user ($userName) is using the Diet Planner. They request: '{$userMessage}'. Please generate a concise, healthy daily meal plan and hydration suggestions based on their input.";
         }
 
         if ($mode === 'fitness') {
-            return $baseContext . "The user is asking about fitness/workouts: '{$userMessage}'. Explain exactly how to perform the exercise, the muscles worked, and advise them to search for '{$userMessage} tutorial' on YouTube or our Gym/Home Workout videos section for visual guidance.";
+            return $baseContext . "The user ($userName) is asking about fitness/workouts: '{$userMessage}'. Explain exactly how to perform the exercise, the muscles worked, and advise them to search for '{$userMessage} tutorial' on YouTube or our Gym/Home Workout videos section for visual guidance.";
         }
 
         if ($mode === 'meditation') {
-            return $baseContext . "The user is asking about meditation or mental health: '{$userMessage}'. Provide a deeply calming, detailed response, and perhaps a short guided meditation script if appropriate.";
+            return $baseContext . "The user ($userName) is asking about meditation or mental health: '{$userMessage}'. Provide a deeply calming, detailed response, and perhaps a short guided meditation script if appropriate.";
         }
 
         if ($mode === 'medicine') {
-            return $baseContext . "The user is asking about medicine for a disease: '{$userMessage}'. Suggest over-the-counter medicines or common remedies, but absolutely emphasize that they MUST consult a real doctor before taking any medication.";
+            return $baseContext . "The user ($userName) is asking about medicine for a disease: '{$userMessage}'. Suggest over-the-counter medicines or common remedies, but absolutely emphasize that they MUST consult a real doctor before taking any medication.";
         }
 
         if ($mode === 'report') {
-            return $baseContext . "The user has uploaded a medical document (like a blood test report, MRI, PDF, or medical photo) with the message: '{$userMessage}'. PLEASE CAREFULLY EXTRACT AND READ ALL TEXT AND DATA FROM THE DOCUMENT. Analyze the numerical values and medical markers against standard normal ranges. Explain the medical jargon in simple terms so the patient can clearly understand their condition. Explicitly highlight any abnormal, high, or low values and what they might indicate. Finally, strongly advise them to discuss these specific findings with their doctor. Do not just reply with a generic acknowledgment; you MUST provide a detailed, accurate breakdown of the report's actual contents.";
+            return $baseContext . "The user ($userName) has uploaded a medical document (like a blood test report, MRI, PDF, or medical photo) with the message: '{$userMessage}'. Greet $userName by name. PLEASE CAREFULLY EXTRACT AND READ ALL TEXT AND DATA FROM THE DOCUMENT. Analyze the numerical values and medical markers against standard normal ranges. Explain the medical jargon in simple terms so the patient can clearly understand their condition. Explicitly highlight any abnormal, high, or low values and what they might indicate. Finally, strongly advise them to discuss these specific findings with their doctor. Do not just reply with a generic acknowledgment; you MUST provide a detailed, accurate breakdown of the report's actual contents.";
         }
 
-        return $baseContext . "The user asks: '{$userMessage}'. Provide a helpful, health-focused answer, explaining details well.";
+        return $baseContext . "The user ($userName) asks: '{$userMessage}'. Provide a helpful, health-focused answer, explaining details well.";
     }
 }
