@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import ThreeBackground from '../Components/ThreeBackground';
 import AIDoctor from '../Components/AIDoctor';
 import { motion } from 'framer-motion';
 import { Activity, Search, Heart, Moon, Flame, Sun, ArrowRight, Video, Stethoscope, Dumbbell, Coffee, Bell, Menu, X, Plus, Clock, FileText, CheckCircle, Brain, Calendar, LogOut, ChevronRight } from 'lucide-react';
@@ -37,6 +38,14 @@ export default function Dashboard({ user, healthData }) {
     const [darkMode, setDarkMode] = useState(true);
     const [height, setHeight] = useState('');
     const [weight, setWeight] = useState('');
+    const [steps, setSteps] = useState('');
+    const [caloriesBurned, setCaloriesBurned] = useState('');
+    const [bloodSugar, setBloodSugar] = useState('');
+    const [sleepHours, setSleepHours] = useState('');
+    const [waterIntake, setWaterIntake] = useState('');
+    const [bloodPressure, setBloodPressure] = useState('');
+    const [mindfulnessMinutes, setMindfulnessMinutes] = useState('');
+    const [mood, setMood] = useState('Good');
 
     const themeColors = {
         bg: darkMode ? 'bg-[#0f172a]' : 'bg-slate-50',
@@ -129,7 +138,15 @@ export default function Dashboard({ user, healthData }) {
     React.useEffect(() => {
         if (today.height && !height) setHeight(today.height);
         if (today.weight && !weight) setWeight(today.weight);
-    }, [today.height, today.weight]);
+        if (today.steps && !steps) setSteps(today.steps);
+        if (today.calories_burned && !caloriesBurned) setCaloriesBurned(today.calories_burned);
+        if (today.blood_sugar && !bloodSugar) setBloodSugar(today.blood_sugar);
+        if (today.sleep_hours && !sleepHours) setSleepHours(today.sleep_hours);
+        if (today.water_intake && !waterIntake) setWaterIntake(today.water_intake);
+        if (today.blood_pressure && !bloodPressure) setBloodPressure(today.blood_pressure);
+        if (today.mindfulness_minutes && !mindfulnessMinutes) setMindfulnessMinutes(today.mindfulness_minutes);
+        if (today.mood && mood === 'Good') setMood(today.mood);
+    }, [today]);
 
     const calculateBMI = () => {
         if (height && weight) {
@@ -139,7 +156,11 @@ export default function Dashboard({ user, healthData }) {
     };
 
     return (
-        <div className={`flex h-screen ${themeColors.bg} ${themeColors.text} overflow-hidden font-sans transition-colors duration-300`}>
+        <div className={`flex h-screen ${themeColors.bg} ${themeColors.text} overflow-hidden font-sans transition-colors duration-300 relative`}>
+            {/* 3D Background - muted for dashboard */}
+            <div className="fixed inset-0 z-[-10] pointer-events-none opacity-40">
+                <ThreeBackground />
+            </div>
 
             {/* Sidebar */}
             <motion.aside 
@@ -310,11 +331,11 @@ export default function Dashboard({ user, healthData }) {
                                     <div className="grid grid-cols-2 gap-2">
                                         <div className="space-y-1">
                                             <label htmlFor="steps" className={`text-xs ${themeColors.mutedText}`}>Steps</label>
-                                            <input type="number" id="steps" name="steps" defaultValue={today.steps || ''} className={`w-full ${themeColors.inputBg} border ${themeColors.borderColor} rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#4CAF50] focus:ring-offset-1 focus:border-transparent transition-all`} />
+                                            <input type="number" id="steps" name="steps" value={steps} onChange={(e) => setSteps(e.target.value)} className={`w-full ${themeColors.inputBg} border ${themeColors.borderColor} rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#4CAF50] focus:ring-offset-1 focus:border-transparent transition-all`} />
                                         </div>
                                         <div className="space-y-1">
                                             <label htmlFor="calories_burned" className={`text-xs ${themeColors.mutedText}`}>Calories Burned</label>
-                                            <input type="number" id="calories_burned" name="calories_burned" defaultValue={today.calories_burned || ''} className={`w-full ${themeColors.inputBg} border ${themeColors.borderColor} rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#4CAF50] focus:ring-offset-1 focus:border-transparent transition-all`} />
+                                            <input type="number" id="calories_burned" name="calories_burned" value={caloriesBurned} onChange={(e) => setCaloriesBurned(e.target.value)} className={`w-full ${themeColors.inputBg} border ${themeColors.borderColor} rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#4CAF50] focus:ring-offset-1 focus:border-transparent transition-all`} />
                                         </div>
                                     </div>
                                     <div className="grid grid-cols-2 gap-2">
@@ -334,32 +355,32 @@ export default function Dashboard({ user, healthData }) {
                                         </div>
                                         <div className="space-y-1">
                                             <label htmlFor="blood_sugar" className={`text-xs ${themeColors.mutedText}`}>Blood Sugar</label>
-                                            <input type="number" id="blood_sugar" step="1" name="blood_sugar" defaultValue={today.blood_sugar || ''} className={`w-full ${themeColors.inputBg} border ${themeColors.borderColor} rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#4CAF50] focus:ring-offset-1 focus:border-transparent transition-all`} />
+                                            <input type="number" id="blood_sugar" step="1" name="blood_sugar" value={bloodSugar} onChange={(e) => setBloodSugar(e.target.value)} className={`w-full ${themeColors.inputBg} border ${themeColors.borderColor} rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#4CAF50] focus:ring-offset-1 focus:border-transparent transition-all`} />
                                         </div>
                                     </div>
                                     <div className="grid grid-cols-2 gap-2 mt-2">
                                         <div className="space-y-1">
                                             <label htmlFor="sleep_hours" className={`text-xs ${themeColors.mutedText}`}>Sleep (hrs)</label>
-                                            <input type="number" id="sleep_hours" step="0.1" name="sleep_hours" defaultValue={today.sleep_hours || ''} className={`w-full ${themeColors.inputBg} border ${themeColors.borderColor} rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#4CAF50] focus:ring-offset-1 focus:border-transparent transition-all`} />
+                                            <input type="number" id="sleep_hours" step="0.1" name="sleep_hours" value={sleepHours} onChange={(e) => setSleepHours(e.target.value)} className={`w-full ${themeColors.inputBg} border ${themeColors.borderColor} rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#4CAF50] focus:ring-offset-1 focus:border-transparent transition-all`} />
                                         </div>
                                         <div className="space-y-1">
                                             <label htmlFor="water_intake" className={`text-xs ${themeColors.mutedText}`}>Water (L)</label>
-                                            <input type="number" id="water_intake" step="0.1" name="water_intake" defaultValue={today.water_intake || ''} className={`w-full ${themeColors.inputBg} border ${themeColors.borderColor} rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#4CAF50] focus:ring-offset-1 focus:border-transparent transition-all`} />
+                                            <input type="number" id="water_intake" step="0.1" name="water_intake" value={waterIntake} onChange={(e) => setWaterIntake(e.target.value)} className={`w-full ${themeColors.inputBg} border ${themeColors.borderColor} rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#4CAF50] focus:ring-offset-1 focus:border-transparent transition-all`} />
                                         </div>
                                     </div>
                                     <div className="grid grid-cols-2 gap-2 mt-2">
                                         <div className="space-y-1">
                                             <label htmlFor="blood_pressure" className={`text-xs ${themeColors.mutedText}`}>Blood Pressure</label>
-                                            <input type="text" id="blood_pressure" name="blood_pressure" defaultValue={today.blood_pressure || ''} placeholder="120/80" className={`w-full ${themeColors.inputBg} border ${themeColors.borderColor} rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#4CAF50] focus:ring-offset-1 focus:border-transparent transition-all`} />
+                                            <input type="text" id="blood_pressure" name="blood_pressure" value={bloodPressure} onChange={(e) => setBloodPressure(e.target.value)} placeholder="120/80" className={`w-full ${themeColors.inputBg} border ${themeColors.borderColor} rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#4CAF50] focus:ring-offset-1 focus:border-transparent transition-all`} />
                                         </div>
                                         <div className="space-y-1">
                                             <label htmlFor="mindfulness_minutes" className={`text-xs ${themeColors.mutedText}`}>Mindfulness (mins)</label>
-                                            <input type="number" id="mindfulness_minutes" step="1" name="mindfulness_minutes" defaultValue={today.mindfulness_minutes || ''} className={`w-full ${themeColors.inputBg} border ${themeColors.borderColor} rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#4CAF50] focus:ring-offset-1 focus:border-transparent transition-all`} />
+                                            <input type="number" id="mindfulness_minutes" step="1" name="mindfulness_minutes" value={mindfulnessMinutes} onChange={(e) => setMindfulnessMinutes(e.target.value)} className={`w-full ${themeColors.inputBg} border ${themeColors.borderColor} rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#4CAF50] focus:ring-offset-1 focus:border-transparent transition-all`} />
                                         </div>
                                     </div>
                                         <div className="space-y-1">
                                             <label htmlFor="mood" className={`text-xs ${themeColors.mutedText}`}>Mood Today</label>
-                                            <select id="mood" name="mood" defaultValue={today.mood || 'Good'} className={`w-full ${themeColors.inputBg} border ${themeColors.borderColor} rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#4CAF50] focus:ring-offset-1 focus:border-transparent transition-all`}>
+                                            <select id="mood" name="mood" value={mood} onChange={(e) => setMood(e.target.value)} className={`w-full ${themeColors.inputBg} border ${themeColors.borderColor} rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#4CAF50] focus:ring-offset-1 focus:border-transparent transition-all`}>
                                                 <option value="Excellent">😁 Excellent</option>
                                                 <option value="Good">🙂 Good</option>
                                                 <option value="Neutral">😐 Neutral</option>

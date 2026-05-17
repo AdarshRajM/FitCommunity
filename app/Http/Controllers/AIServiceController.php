@@ -44,9 +44,8 @@ class AIServiceController extends Controller
             return $this->handleTextRequest($prompt, $apiKey);
         } catch (\Exception $e) {
             Log::error('AI Service Error: ' . $e->getMessage());
-            // Fallback to mock engine if the real API fails
-            $reply = $this->runLocalMockEngine($request->mode, $request->message, $request->hasFile('image'));
-            return response()->json(['reply' => $reply]);
+            // RETURN THE EXACT GOOGLE ERROR TO THE USER SO WE KNOW IF THE KEY IS BLOCKED
+            return response()->json(['reply' => "⚠️ **Google AI Connection Failed:**\n\nError Details: " . $e->getMessage() . "\n\nThis means your API Key is being rejected by Google. Please check your Render environment variables or generate a new key."]);
         }
     }
 
@@ -137,7 +136,7 @@ class AIServiceController extends Controller
             return response()->json(['reply' => $reply]);
         }
 
-        throw new \Exception('Failed to get response from Gemini API.');
+        throw new \Exception('Failed to get response from Gemini API: ' . $response->body());
     }
 
     private function handleVisionRequest($prompt, $image, $apiKey)
@@ -169,7 +168,7 @@ class AIServiceController extends Controller
             return response()->json(['reply' => $reply]);
         }
 
-        throw new \Exception('Failed to get response from Gemini Vision API.');
+        throw new \Exception('Failed to get response from Gemini Vision API: ' . $response->body());
     }
 
     private function buildPrompt($mode, $userMessage, $userName = 'User')
