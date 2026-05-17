@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use MongoDB\Laravel\Eloquent\SoftDeletes;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use MongoDB\Laravel\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Comment extends Model
 {
+    use SoftDeletes;
     use HasFactory;
 
     protected $fillable = [

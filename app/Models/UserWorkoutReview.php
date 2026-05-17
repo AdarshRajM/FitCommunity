@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use MongoDB\Laravel\Eloquent\SoftDeletes;
+
 use MongoDB\Laravel\Eloquent\Model;
 
 class UserWorkoutReview extends Model
 {
+    use SoftDeletes;
     protected $fillable = [
         'user_id', 'user_workout_id', 'review', 'rating'
     ];

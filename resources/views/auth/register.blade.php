@@ -1,5 +1,5 @@
 <x-guest-layout>
-    <div class="text-center mb-8">
+    <div class="text-center mb-8 animate-[fadeInDown_0.5s_ease-out]">
         <h2 class="text-3xl font-extrabold text-white mb-2">Create Account</h2>
         <p class="text-slate-400 text-sm">Join the community and start tracking your fitness</p>
     </div>
@@ -8,21 +8,21 @@
         @csrf
 
         <!-- Name -->
-        <div>
+        <div class="animate-[fadeInUp_0.5s_ease-out_0.1s_both]">
             <label for="name" class="block text-sm font-medium text-slate-300 mb-2">{{ __('Full Name') }}</label>
             <input id="name" class="block w-full px-4 py-3 bg-[#0f172a]/80 border border-slate-600 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#4CAF50] focus:border-transparent hover:border-slate-500 shadow-sm focus:shadow-[0_0_15px_rgba(76,175,80,0.2)] transition-all duration-300" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" placeholder="John Doe" />
             <x-input-error :messages="$errors->get('name')" class="mt-2 text-red-400 text-sm" />
         </div>
 
         <!-- Email Address -->
-        <div>
+        <div class="animate-[fadeInUp_0.5s_ease-out_0.2s_both]">
             <label for="email" class="block text-sm font-medium text-slate-300 mb-2">{{ __('Email Address') }}</label>
             <input id="email" class="block w-full px-4 py-3 bg-[#0f172a]/80 border border-slate-600 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#4CAF50] focus:border-transparent hover:border-slate-500 shadow-sm focus:shadow-[0_0_15px_rgba(76,175,80,0.2)] transition-all duration-300" type="email" name="email" :value="old('email')" required autocomplete="username" placeholder="you@example.com" />
             <x-input-error :messages="$errors->get('email')" class="mt-2 text-red-400 text-sm" />
         </div>
 
         <!-- Password -->
-        <div>
+        <div class="animate-[fadeInUp_0.5s_ease-out_0.3s_both]">
             <label for="password" class="block text-sm font-medium text-slate-300 mb-2">{{ __('Password') }}</label>
             <input id="password" class="block w-full px-4 py-3 bg-[#0f172a]/80 border border-slate-600 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#4CAF50] focus:border-transparent hover:border-slate-500 shadow-sm focus:shadow-[0_0_15px_rgba(76,175,80,0.2)] transition-all duration-300"
                             type="password"
@@ -32,7 +32,7 @@
         </div>
 
         <!-- Confirm Password -->
-        <div>
+        <div class="animate-[fadeInUp_0.5s_ease-out_0.4s_both]">
             <label for="password_confirmation" class="block text-sm font-medium text-slate-300 mb-2">{{ __('Confirm Password') }}</label>
             <input id="password_confirmation" class="block w-full px-4 py-3 bg-[#0f172a]/80 border border-slate-600 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#4CAF50] focus:border-transparent hover:border-slate-500 shadow-sm focus:shadow-[0_0_15px_rgba(76,175,80,0.2)] transition-all duration-300"
                             type="password"
@@ -41,7 +41,7 @@
         </div>
 
         <!-- Health Profile Fields Section -->
-        <div class="pt-4 pb-2 border-t border-slate-700/50 mt-4">
+        <div class="pt-4 pb-2 border-t border-slate-700/50 mt-4 animate-[fadeInUp_0.5s_ease-out_0.5s_both]">
             <h3 class="text-sm font-semibold text-[#4CAF50] mb-4 uppercase tracking-wider">Health Profile Details</h3>
             
             <div class="grid grid-cols-2 gap-4">
@@ -87,17 +87,28 @@
             </div>
         </div>
 
-        <div class="pt-2">
+        <div class="pt-2 animate-[fadeInUp_0.5s_ease-out_0.6s_both]">
             <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-[0_0_15px_rgba(76,175,80,0.3)] text-sm font-bold text-white bg-gradient-to-r from-[#4CAF50] to-[#2196F3] hover:from-[#45a049] hover:to-[#1e88e5] hover:shadow-[0_0_25px_rgba(76,175,80,0.5)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4CAF50] focus:ring-offset-[#0f172a] transform transition-all duration-300 hover:scale-[1.02]">
                 {{ __('Create Account') }}
             </button>
         </div>
 
-        <div class="text-center mt-6">
+        <div class="text-center mt-6 animate-[fadeInUp_0.5s_ease-out_0.7s_both]">
             <p class="text-sm text-slate-400">
                 Already have an account? 
-                <a href="{{ route('login') }}" class="font-semibold text-[#4CAF50] hover:text-[#8BC34A] transition-colors">Sign in</a>
+                <a href="{{ route('login') }}" class="font-semibold text-[#4CAF50] hover:text-[#8BC34A] transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:origin-bottom-right after:scale-x-0 after:bg-[#4CAF50] after:transition-transform after:duration-300 hover:after:origin-bottom-left hover:after:scale-x-100">Sign in</a>
             </p>
         </div>
     </form>
+    
+    <style>
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </x-guest-layout>

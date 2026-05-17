@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use MongoDB\Laravel\Eloquent\SoftDeletes;
+
 use MongoDB\Laravel\Eloquent\Model;
 
 class MedicalReport extends Model
 {
+    use SoftDeletes;
     protected $fillable = [
         'doctor_id',
         'patient_id',

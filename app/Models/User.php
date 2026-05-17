@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use MongoDB\Laravel\Eloquent\SoftDeletes;
+
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use MongoDB\Laravel\Auth\User as Authenticatable;
@@ -12,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends Authenticatable
 {
+    use SoftDeletes;
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
