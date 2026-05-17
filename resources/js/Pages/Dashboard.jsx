@@ -323,7 +323,7 @@ export default function Dashboard({ user, healthData }) {
 
                             {/* Quick Action / Form */}
                             <div>
-                                <motion.div className={`${themeColors.cardBg} backdrop-blur-md border ${themeColors.borderColor} rounded-3xl p-6 shadow-lg transition-colors`}>
+                                <motion.div className={`${themeColors.cardBg} border ${themeColors.borderColor} rounded-3xl p-6 shadow-lg transition-colors`}>
                                     <h3 className="text-lg font-bold mb-4">Quick Log Today</h3>
                                     <form action="/dashboard/health" method="POST" className="flex-1 space-y-4">
                                         <input type="hidden" name="_token" value={document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')} />
