@@ -6,6 +6,9 @@ RUN apt-get update && apt-get install -y \
     curl \
     libpq-dev \
     npm \
+    libssl-dev \
+    && pecl install mongodb \
+    && docker-php-ext-enable mongodb \
     && docker-php-ext-install pdo pdo_pgsql
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
