@@ -356,7 +356,7 @@ export default function AIDoctor() {
                                     <button onClick={() => setSelectedImage(null)} className="text-red-400 hover:text-red-300"><X size={14} /></button>
                                 </div>
                             )}
-                            <div className={`flex items-center gap-2 rounded-full p-1 pr-2 border focus-within:border-[#4CAF50] transition-colors relative ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300'}`}>
+                            <div className={`flex items-center gap-2 rounded-full p-1 pr-2 border focus-within:ring-2 focus-within:ring-[#4CAF50] transition-all relative ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300'}`}>
                                 <input
                                     type="file"
                                     accept="image/*"
@@ -371,6 +371,7 @@ export default function AIDoctor() {
                                     type="text"
                                     value={input}
                                     onChange={(e) => setInput(e.target.value)}
+                                    autoFocus
                                     onKeyPress={(e) => e.key === 'Enter' && handleSend()}
                                     placeholder={isRecording ? "Listening..." : "Type or speak your message..."}
                                     className={`flex-1 bg-transparent border-none text-sm focus:ring-0 px-2 ${isDarkMode ? 'text-slate-200' : 'text-slate-800'}`}

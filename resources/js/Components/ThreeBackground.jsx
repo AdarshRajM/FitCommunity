@@ -68,7 +68,7 @@ function ParticleNetwork(props) {
 export default function ThreeBackground() {
     return (
         <div className="absolute inset-0 z-0 pointer-events-none">
-            <Canvas camera={{ position: [0, 0, 3] }}>
+            <Canvas camera={{ position: [0, 0, 3] }} style={{ pointerEvents: 'none' }}>
                 <ambientLight intensity={0.5} />
                 <ParticleSphere />
                 <ParticleNetwork />

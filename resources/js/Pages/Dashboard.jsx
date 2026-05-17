@@ -36,6 +36,8 @@ ChartJS.register(
 export default function Dashboard({ user, healthData }) {
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [darkMode, setDarkMode] = useState(true);
+    const [height, setHeight] = useState('');
+    const [weight, setWeight] = useState('');
 
     const themeColors = {
         bg: darkMode ? 'bg-[#0f172a]' : 'bg-slate-50',
@@ -123,6 +125,19 @@ export default function Dashboard({ user, healthData }) {
 
     const stats = healthData?.stats || { totalPosts: 0, totalRecords: 0, totalAppointments: 0, totalMessages: 0 };
     const today = healthData?.todayRecord || {};
+
+    // Initialize state from props if available and not yet set
+    React.useEffect(() => {
+        if (today.height && !height) setHeight(today.height);
+        if (today.weight && !weight) setWeight(today.weight);
+    }, [today.height, today.weight]);
+
+    const calculateBMI = () => {
+        if (height && weight) {
+            return (weight / ((height/100) * (height/100))).toFixed(1);
+        }
+        return '';
+    };
 
     return (
         <div className={`flex h-screen ${themeColors.bg} ${themeColors.text} overflow-hidden font-sans transition-colors duration-300`}>
@@ -300,68 +315,56 @@ export default function Dashboard({ user, healthData }) {
                                     <div className="grid grid-cols-2 gap-2">
                                         <div className="space-y-1">
                                             <label htmlFor="steps" className={`text-xs ${themeColors.mutedText}`}>Steps</label>
-                                            <input type="number" id="steps" name="steps" defaultValue={today.steps || ''} className={`w-full ${themeColors.inputBg} border ${themeColors.borderColor} rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#4CAF50] focus:ring-1 focus:ring-[#4CAF50]`} />
+                                            <input type="number" id="steps" name="steps" defaultValue={today.steps || ''} className={`w-full ${themeColors.inputBg} border ${themeColors.borderColor} rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#4CAF50] focus:ring-offset-1 focus:border-transparent transition-all`} />
                                         </div>
                                         <div className="space-y-1">
                                             <label htmlFor="calories_burned" className={`text-xs ${themeColors.mutedText}`}>Calories Burned</label>
-                                            <input type="number" id="calories_burned" name="calories_burned" defaultValue={today.calories_burned || ''} className={`w-full ${themeColors.inputBg} border ${themeColors.borderColor} rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#4CAF50] focus:ring-1 focus:ring-[#4CAF50]`} />
+                                            <input type="number" id="calories_burned" name="calories_burned" defaultValue={today.calories_burned || ''} className={`w-full ${themeColors.inputBg} border ${themeColors.borderColor} rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#4CAF50] focus:ring-offset-1 focus:border-transparent transition-all`} />
                                         </div>
                                     </div>
                                     <div className="grid grid-cols-2 gap-2">
                                         <div className="space-y-1">
                                             <label htmlFor="height_input" className={`text-xs ${themeColors.mutedText}`}>Height (cm)</label>
-                                            <input type="number" step="0.1" name="height" id="height_input" defaultValue={today.height || ''} onInput={(e) => {
-                                                const h = e.target.value;
-                                                const w = document.getElementById('weight_input').value;
-                                                if (h && w) {
-                                                    document.getElementById('bmi_input').value = (w / ((h/100) * (h/100))).toFixed(1);
-                                                }
-                                            }} className={`w-full ${themeColors.inputBg} border ${themeColors.borderColor} rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#4CAF50] focus:ring-1 focus:ring-[#4CAF50]`} />
+                                            <input type="number" step="0.1" name="height" id="height_input" value={height} onChange={(e) => setHeight(e.target.value)} className={`w-full ${themeColors.inputBg} border ${themeColors.borderColor} rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#4CAF50] focus:ring-offset-1 focus:border-transparent transition-all`} />
                                         </div>
                                         <div className="space-y-1">
                                             <label htmlFor="weight_input" className={`text-xs ${themeColors.mutedText}`}>Weight (kg)</label>
-                                            <input type="number" step="0.1" name="weight" id="weight_input" defaultValue={today.weight || ''} onInput={(e) => {
-                                                const w = e.target.value;
-                                                const h = document.getElementById('height_input').value;
-                                                if (h && w) {
-                                                    document.getElementById('bmi_input').value = (w / ((h/100) * (h/100))).toFixed(1);
-                                                }
-                                            }} className={`w-full ${themeColors.inputBg} border ${themeColors.borderColor} rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#4CAF50] focus:ring-1 focus:ring-[#4CAF50]`} />
+                                            <input type="number" step="0.1" name="weight" id="weight_input" value={weight} onChange={(e) => setWeight(e.target.value)} className={`w-full ${themeColors.inputBg} border ${themeColors.borderColor} rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#4CAF50] focus:ring-offset-1 focus:border-transparent transition-all`} />
                                         </div>
                                     </div>
                                     <div className="grid grid-cols-2 gap-2">
                                         <div className="space-y-1">
                                             <label htmlFor="bmi_input" className={`text-xs ${themeColors.mutedText}`}>BMI (Auto Calc)</label>
-                                            <input type="number" step="0.1" name="bmi" id="bmi_input" defaultValue={today.bmi || ''} readOnly className={`w-full bg-slate-100 dark:bg-slate-800 border ${themeColors.borderColor} rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#4CAF50] cursor-not-allowed`} />
+                                            <input type="number" step="0.1" name="bmi" id="bmi_input" value={calculateBMI()} readOnly className={`w-full bg-slate-100 dark:bg-slate-800 border ${themeColors.borderColor} rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#4CAF50] cursor-not-allowed`} />
                                         </div>
                                         <div className="space-y-1">
                                             <label htmlFor="blood_sugar" className={`text-xs ${themeColors.mutedText}`}>Blood Sugar</label>
-                                            <input type="number" id="blood_sugar" step="1" name="blood_sugar" defaultValue={today.blood_sugar || ''} className={`w-full ${themeColors.inputBg} border ${themeColors.borderColor} rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#4CAF50] focus:ring-1 focus:ring-[#4CAF50]`} />
+                                            <input type="number" id="blood_sugar" step="1" name="blood_sugar" defaultValue={today.blood_sugar || ''} className={`w-full ${themeColors.inputBg} border ${themeColors.borderColor} rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#4CAF50] focus:ring-offset-1 focus:border-transparent transition-all`} />
                                         </div>
                                     </div>
                                     <div className="grid grid-cols-2 gap-2 mt-2">
                                         <div className="space-y-1">
                                             <label htmlFor="sleep_hours" className={`text-xs ${themeColors.mutedText}`}>Sleep (hrs)</label>
-                                            <input type="number" id="sleep_hours" step="0.1" name="sleep_hours" defaultValue={today.sleep_hours || ''} className={`w-full ${themeColors.inputBg} border ${themeColors.borderColor} rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#4CAF50] focus:ring-1 focus:ring-[#4CAF50]`} />
+                                            <input type="number" id="sleep_hours" step="0.1" name="sleep_hours" defaultValue={today.sleep_hours || ''} className={`w-full ${themeColors.inputBg} border ${themeColors.borderColor} rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#4CAF50] focus:ring-offset-1 focus:border-transparent transition-all`} />
                                         </div>
                                         <div className="space-y-1">
                                             <label htmlFor="water_intake" className={`text-xs ${themeColors.mutedText}`}>Water (L)</label>
-                                            <input type="number" id="water_intake" step="0.1" name="water_intake" defaultValue={today.water_intake || ''} className={`w-full ${themeColors.inputBg} border ${themeColors.borderColor} rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#4CAF50] focus:ring-1 focus:ring-[#4CAF50]`} />
+                                            <input type="number" id="water_intake" step="0.1" name="water_intake" defaultValue={today.water_intake || ''} className={`w-full ${themeColors.inputBg} border ${themeColors.borderColor} rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#4CAF50] focus:ring-offset-1 focus:border-transparent transition-all`} />
                                         </div>
                                     </div>
                                     <div className="grid grid-cols-2 gap-2 mt-2">
                                         <div className="space-y-1">
                                             <label htmlFor="blood_pressure" className={`text-xs ${themeColors.mutedText}`}>Blood Pressure</label>
-                                            <input type="text" id="blood_pressure" name="blood_pressure" defaultValue={today.blood_pressure || ''} placeholder="120/80" className={`w-full ${themeColors.inputBg} border ${themeColors.borderColor} rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500`} />
+                                            <input type="text" id="blood_pressure" name="blood_pressure" defaultValue={today.blood_pressure || ''} placeholder="120/80" className={`w-full ${themeColors.inputBg} border ${themeColors.borderColor} rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#4CAF50] focus:ring-offset-1 focus:border-transparent transition-all`} />
                                         </div>
                                         <div className="space-y-1">
                                             <label htmlFor="mindfulness_minutes" className={`text-xs ${themeColors.mutedText}`}>Mindfulness (mins)</label>
-                                            <input type="number" id="mindfulness_minutes" step="1" name="mindfulness_minutes" defaultValue={today.mindfulness_minutes || ''} className={`w-full ${themeColors.inputBg} border ${themeColors.borderColor} rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500`} />
+                                            <input type="number" id="mindfulness_minutes" step="1" name="mindfulness_minutes" defaultValue={today.mindfulness_minutes || ''} className={`w-full ${themeColors.inputBg} border ${themeColors.borderColor} rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#4CAF50] focus:ring-offset-1 focus:border-transparent transition-all`} />
                                         </div>
                                     </div>
                                         <div className="space-y-1">
                                             <label htmlFor="mood" className={`text-xs ${themeColors.mutedText}`}>Mood Today</label>
-                                            <select id="mood" name="mood" defaultValue={today.mood || 'Good'} className={`w-full ${themeColors.inputBg} border ${themeColors.borderColor} rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-purple-500`}>
+                                            <select id="mood" name="mood" defaultValue={today.mood || 'Good'} className={`w-full ${themeColors.inputBg} border ${themeColors.borderColor} rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#4CAF50] focus:ring-offset-1 focus:border-transparent transition-all`}>
                                                 <option value="Excellent">😁 Excellent</option>
                                                 <option value="Good">🙂 Good</option>
                                                 <option value="Neutral">😐 Neutral</option>
