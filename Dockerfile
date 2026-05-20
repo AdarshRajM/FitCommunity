@@ -6,6 +6,8 @@ RUN apt-get update && apt-get install -y \
     curl \
     libpq-dev \
     libssl-dev \
+    pkg-config \
+    libcurl4-openssl-dev \
     && curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
     && apt-get install -y nodejs \
     && pecl install mongodb \
