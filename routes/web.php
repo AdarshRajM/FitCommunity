@@ -43,6 +43,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/appointments', [\App\Http\Controllers\AppointmentController::class, 'store'])->name('appointments.store');
     Route::patch('/appointments/{appointment}/status', [\App\Http\Controllers\AppointmentController::class, 'updateStatus'])->name('appointments.status');
 
+    // Nutrition AI System
+    Route::get('/nutrition', [\App\Http\Controllers\NutritionController::class, 'index'])->name('nutrition.index');
+    Route::post('/nutrition/analyze', [\App\Http\Controllers\NutritionController::class, 'analyze'])->name('nutrition.analyze');
+
     // Telemedicine
     Route::get('/telemedicine/room/{peer_id}', function($peer_id) {
         return view('telemedicine.room', ['peer_id' => $peer_id]);

@@ -14,6 +14,18 @@
             <x-input-error :messages="$errors->get('name')" class="mt-2 text-red-400 text-sm" />
         </div>
 
+        <!-- Profession -->
+        <div class="animate-[fadeInUp_0.5s_ease-out_0.15s_both]">
+            <label for="profession" class="block text-sm font-medium text-slate-300 mb-2">Profession</label>
+            <select id="profession" name="profession" required class="block w-full px-4 py-3 bg-[#0f172a]/80 border border-slate-600 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#4CAF50] focus:border-transparent hover:border-slate-500 shadow-sm focus:shadow-[0_0_15px_rgba(76,175,80,0.2)] transition-all duration-300 appearance-none">
+                <option value="User">General User</option>
+                <option value="Doctor">Doctor</option>
+                <option value="Fitness Trainer">Fitness Trainer</option>
+                <option value="Dietitian">Dietitian</option>
+            </select>
+            <x-input-error :messages="$errors->get('profession')" class="mt-2 text-red-400 text-sm" />
+        </div>
+
         <!-- Email Address -->
         <div class="animate-[fadeInUp_0.5s_ease-out_0.2s_both]">
             <label for="email" class="block text-sm font-medium text-slate-300 mb-2">{{ __('Email Address') }}</label>

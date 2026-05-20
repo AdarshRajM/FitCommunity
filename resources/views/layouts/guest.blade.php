@@ -4,9 +4,8 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
-
-        <title>{{ config('app.name', 'FitCommunity') }}</title>
-
+        <title>@yield('title', 'Welcome') | FitCommunity</title>
+        <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -57,9 +56,7 @@
         <div class="relative z-10 w-full sm:max-w-md mt-6 px-8 py-8 glass-panel sm:rounded-2xl transition-all duration-500 hover:shadow-2xl hover:shadow-[#4CAF50]/20">
             <div class="flex justify-center mb-6">
                 <a href="/" class="flex items-center gap-2 group">
-                    <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-[#4CAF50] to-[#2196F3] flex items-center justify-center font-bold text-2xl text-white shadow-lg group-hover:scale-110 transition-transform duration-300">
-                        F
-                    </div>
+                    <img src="{{ asset('logo.svg') }}" alt="FitCommunity Logo" class="w-14 h-14 shadow-lg group-hover:scale-110 transition-transform duration-300">
                     <span class="text-3xl font-bold tracking-tight text-white group-hover:text-[#4CAF50] transition-colors">Fit<span class="text-[#4CAF50] group-hover:text-white transition-colors">Community</span></span>
                 </a>
             </div>

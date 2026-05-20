@@ -100,7 +100,12 @@
                                                 <img src="{{ $post->user->avatar ? asset('storage/'.$post->user->avatar) : 'https://ui-avatars.com/api/?name='.urlencode($post->user->name).'&background=10b981&color=fff' }}" class="w-full h-full object-cover" alt="{{ $post->user->name }}">
                                             </div>
                                             <div>
-                                                <h4 class="font-bold text-slate-800">{{ $post->user->name }}</h4>
+                                                <h4 class="font-bold text-slate-800">
+                                                    {{ $post->user->name }}
+                                                    @if($post->user->profession)
+                                                        <span class="text-xs font-normal ml-2 px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200">{{ $post->user->profession }}</span>
+                                                    @endif
+                                                </h4>
                                                 <p class="text-xs text-slate-400">{{ $post->created_at->diffForHumans() }}</p>
                                             </div>
                                         </div>

@@ -46,6 +46,9 @@ export default function Dashboard({ user, healthData }) {
     const [bloodPressure, setBloodPressure] = useState('');
     const [mindfulnessMinutes, setMindfulnessMinutes] = useState('');
     const [mood, setMood] = useState('Good');
+    const [showFoodModal, setShowFoodModal] = useState(false);
+    const [foodItems, setFoodItems] = useState([{ id: 1, name: '', quantity: 1, caloriesPerUnit: 0 }]);
+    const [caloriesConsumed, setCaloriesConsumed] = useState('');
 
     const themeColors = {
         bg: darkMode ? 'bg-[#0f172a]' : 'bg-slate-50',
@@ -153,6 +156,56 @@ export default function Dashboard({ user, healthData }) {
             return (weight / ((height/100) * (height/100))).toFixed(1);
         }
         return '';
+    };
+
+    const foodCaloriesLookup = {
+        'Apple': 95,
+        'Banana': 105,
+        'Egg': 78,
+        'Rice (1 cup)': 200,
+        'Chicken Breast (100g)': 165,
+        'Salad': 40,
+        'Bread Slice': 70,
+        'Yogurt (100g)': 59,
+        'Oats (1/2 cup)': 150,
+        'Coffee': 5,
+    };
+
+    const updateFoodItem = (id, field, value) => {
+        setFoodItems((prev) => prev.map((item) => {
+            if (item.id !== id) return item;
+            if (field === 'quantity') {
+                return { ...item, quantity: Number(value) };
+            }
+            if (field === 'name') {
+                const unitCalories = foodCaloriesLookup[value] ?? item.caloriesPerUnit;
+                return { ...item, name: value, caloriesPerUnit: unitCalories };
+            }
+            if (field === 'caloriesPerUnit') {
+                return { ...item, caloriesPerUnit: Number(value) };
+            }
+            return { ...item, [field]: value };
+        }));
+    };
+
+    const addFoodItem = () => {
+        setFoodItems((prev) => [...prev, { id: Date.now(), name: '', quantity: 1, caloriesPerUnit: 0 }]);
+    };
+
+    const removeFoodItem = (id) => {
+        setFoodItems((prev) => prev.length > 1 ? prev.filter((item) => item.id !== id) : prev);
+    };
+
+    const handleFoodSubmit = (event) => {
+        event.preventDefault();
+
+        const totalCalories = foodItems.reduce((sum, item) => {
+            const unitValue = item.caloriesPerUnit || 0;
+            return sum + (Number(item.quantity) * Number(unitValue));
+        }, 0);
+
+        setCaloriesConsumed(totalCalories ? totalCalories.toFixed(0) : '0');
+        setShowFoodModal(false);
     };
 
     return (
@@ -327,6 +380,8 @@ export default function Dashboard({ user, healthData }) {
                                     <h3 className="text-lg font-bold mb-4">Quick Log Today</h3>
                                     <form action="/dashboard/health" method="POST" className="flex-1 space-y-4">
                                         <input type="hidden" name="_token" value={document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')} />
+                                        <input type="hidden" name="calories_consumed" value={caloriesConsumed} />
+                                        <input type="hidden" name="food_log" value={JSON.stringify(foodItems)} />
                                     
                                     <div className="grid grid-cols-2 gap-2">
                                         <div className="space-y-1">
@@ -351,11 +406,22 @@ export default function Dashboard({ user, healthData }) {
                                     <div className="grid grid-cols-2 gap-2">
                                         <div className="space-y-1">
                                             <label htmlFor="bmi_input" className={`text-xs ${themeColors.mutedText}`}>BMI (Auto Calc)</label>
-                                            <input type="number" step="0.1" name="bmi" id="bmi_input" value={calculateBMI()} readOnly className={`w-full bg-slate-100 dark:bg-slate-800 border ${themeColors.borderColor} rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#4CAF50] cursor-not-allowed`} />
+                                            <input type="number" step="0.1" name="bmi" id="bmi_input" value={calculateBMI()} readOnly className={`w-full bg-slate-100 dark:bg-slate-800 border ${themeColors.borderColor} rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#4CAF50]`} />
                                         </div>
                                         <div className="space-y-1">
                                             <label htmlFor="blood_sugar" className={`text-xs ${themeColors.mutedText}`}>Blood Sugar</label>
                                             <input type="number" id="blood_sugar" step="1" name="blood_sugar" value={bloodSugar} onChange={(e) => setBloodSugar(e.target.value)} className={`w-full ${themeColors.inputBg} border ${themeColors.borderColor} rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#4CAF50] focus:ring-offset-1 focus:border-transparent transition-all`} />
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-2 mt-2">
+                                        <div className="space-y-1">
+                                            <label className={`text-xs ${themeColors.mutedText}`}>Food Calories</label>
+                                            <input type="text" name="calories_consumed" value={caloriesConsumed} readOnly placeholder="Calculate your meal" className={`w-full ${themeColors.inputBg} border ${themeColors.borderColor} rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#4CAF50] focus:ring-offset-1 focus:border-transparent transition-all`} />
+                                        </div>
+                                        <div className="space-y-1">
+                                            <button type="button" onClick={() => setShowFoodModal(true)} className="w-full mt-6 py-3 rounded-xl bg-[#2563eb] text-sm font-medium hover:bg-[#1d4ed8] transition-colors text-white">
+                                                Calculate Food Calories
+                                            </button>
                                         </div>
                                     </div>
                                     <div className="grid grid-cols-2 gap-2 mt-2">
@@ -392,6 +458,68 @@ export default function Dashboard({ user, healthData }) {
                                         Save Metrics
                                     </button>
                                 </form>
+                                {showFoodModal && (
+                                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+                                        <div className="w-full max-w-2xl rounded-3xl bg-[#0f172a] border border-slate-700 p-6 shadow-2xl">
+                                            <div className="flex items-center justify-between mb-4">
+                                                <div>
+                                                    <h3 className="text-lg font-bold">Food Calories Calculator</h3>
+                                                    <p className="text-sm text-slate-400">Enter what you ate, quantity, and calories per serving.</p>
+                                                </div>
+                                                <button type="button" onClick={() => setShowFoodModal(false)} className="text-slate-300 hover:text-white">Close</button>
+                                            </div>
+                                            <form onSubmit={handleFoodSubmit} className="space-y-4">
+                                                {foodItems.map((item, index) => (
+                                                    <div key={item.id} className="grid grid-cols-12 gap-2 items-end">
+                                                        <div className="col-span-5 space-y-1">
+                                                            <label className="text-xs text-slate-400">Food Item</label>
+                                                            <input
+                                                                type="text"
+                                                                value={item.name}
+                                                                onChange={(e) => updateFoodItem(item.id, 'name', e.target.value)}
+                                                                placeholder="e.g. Apple"
+                                                                className="w-full rounded-xl border border-slate-700 bg-[#111827] px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-[#4CAF50]"
+                                                            />
+                                                        </div>
+                                                        <div className="col-span-2 space-y-1">
+                                                            <label className="text-xs text-slate-400">Qty</label>
+                                                            <input
+                                                                type="number"
+                                                                min="0"
+                                                                step="1"
+                                                                value={item.quantity}
+                                                                onChange={(e) => updateFoodItem(item.id, 'quantity', e.target.value)}
+                                                                className="w-full rounded-xl border border-slate-700 bg-[#111827] px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-[#4CAF50]"
+                                                            />
+                                                        </div>
+                                                        <div className="col-span-3 space-y-1">
+                                                            <label className="text-xs text-slate-400">kcal/serving</label>
+                                                            <input
+                                                                type="number"
+                                                                min="0"
+                                                                step="1"
+                                                                value={item.caloriesPerUnit}
+                                                                onChange={(e) => updateFoodItem(item.id, 'caloriesPerUnit', e.target.value)}
+                                                                className="w-full rounded-xl border border-slate-700 bg-[#111827] px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-[#4CAF50]"
+                                                            />
+                                                        </div>
+                                                        <div className="col-span-2 flex justify-end">
+                                                            <button type="button" onClick={() => removeFoodItem(item.id)} className="rounded-xl bg-red-600 px-3 py-2 text-sm font-medium text-white hover:bg-red-500">Remove</button>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                                <div className="flex flex-wrap gap-3 items-center justify-between">
+                                                    <button type="button" onClick={addFoodItem} className="rounded-xl bg-slate-700 px-4 py-3 text-sm font-medium text-white hover:bg-slate-600">Add Another Food</button>
+                                                    <span className="text-sm text-slate-300">Estimated total calories: {foodItems.reduce((sum, item) => sum + (Number(item.quantity) * Number(item.caloriesPerUnit || 0)), 0)} kcal</span>
+                                                </div>
+                                                <div className="flex items-center gap-3">
+                                                    <button type="submit" className="flex-1 rounded-xl bg-[#4CAF50] px-4 py-3 text-sm font-medium text-white hover:bg-[#43a047]">Save Calories</button>
+                                                    <button type="button" onClick={() => setShowFoodModal(false)} className="flex-1 rounded-xl border border-slate-600 px-4 py-3 text-sm font-medium text-slate-200 hover:bg-slate-800">Cancel</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                )}
                                 </motion.div>
                             </div>
                         </div>

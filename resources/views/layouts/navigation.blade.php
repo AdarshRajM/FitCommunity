@@ -6,9 +6,7 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}" class="flex items-center gap-2 group">
-                        <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-[#4CAF50] to-[#2196F3] flex items-center justify-center font-bold text-white text-sm shadow-md group-hover:scale-110 transition-transform">
-                            F
-                        </div>
+                        <img src="{{ asset('logo.svg') }}" alt="FitCommunity Logo" class="w-9 h-9 group-hover:scale-110 transition-transform">
                         <span class="text-xl font-bold tracking-tight text-gray-900 dark:text-white group-hover:text-[#4CAF50] transition-colors">Fit<span class="text-[#4CAF50]">Community</span></span>
                     </a>
                 </div>
@@ -26,6 +24,9 @@
                     </x-nav-link>
                     <x-nav-link :href="route('appointments.index')" :active="request()->routeIs('appointments.*')">
                         {{ __('Appointments') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('nutrition.index')" :active="request()->routeIs('nutrition.*')">
+                        {{ __('Nutrition AI') }}
                     </x-nav-link>
                     <x-nav-link :href="route('blogs.index')" :active="request()->routeIs('blogs.*')">
                         {{ __('Blog') }}
@@ -238,6 +239,9 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('appointments.index')" :active="request()->routeIs('appointments.*')">
                 {{ __('Appointments') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('nutrition.index')" :active="request()->routeIs('nutrition.*')">
+                {{ __('Nutrition AI') }}
             </x-responsive-nav-link>
             @if(optional(Auth::user())->role_id == 1)
             <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.*')">

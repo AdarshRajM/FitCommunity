@@ -35,6 +35,8 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'profession' => $request->profession,
+            'role_id' => ($request->profession === 'Doctor') ? 3 : 2,
         ]);
 
         \App\Models\Profile::create([
