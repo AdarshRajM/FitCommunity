@@ -211,7 +211,7 @@ export default function Dashboard({ user, healthData }) {
     return (
         <div className={`flex h-screen ${themeColors.bg} ${themeColors.text} overflow-hidden font-sans transition-colors duration-300 relative`}>
             {/* 3D Background - muted for dashboard */}
-            <div className="fixed inset-0 z-[-10] pointer-events-none opacity-40">
+            <div className="fixed inset-0 opacity-40" style={{ zIndex: -10, pointerEvents: 'none' }}>
                 <ThreeBackground />
             </div>
 
@@ -458,74 +458,79 @@ export default function Dashboard({ user, healthData }) {
                                         Save Metrics
                                     </button>
                                 </form>
-                                {showFoodModal && (
-                                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-                                        <div className="w-full max-w-2xl rounded-3xl bg-[#0f172a] border border-slate-700 p-6 shadow-2xl">
-                                            <div className="flex items-center justify-between mb-4">
-                                                <div>
-                                                    <h3 className="text-lg font-bold">Food Calories Calculator</h3>
-                                                    <p className="text-sm text-slate-400">Enter what you ate, quantity, and calories per serving.</p>
-                                                </div>
-                                                <button type="button" onClick={() => setShowFoodModal(false)} className="text-slate-300 hover:text-white">Close</button>
-                                            </div>
-                                            <form onSubmit={handleFoodSubmit} className="space-y-4">
-                                                {foodItems.map((item, index) => (
-                                                    <div key={item.id} className="grid grid-cols-12 gap-2 items-end">
-                                                        <div className="col-span-5 space-y-1">
-                                                            <label className="text-xs text-slate-400">Food Item</label>
-                                                            <input
-                                                                type="text"
-                                                                value={item.name}
-                                                                onChange={(e) => updateFoodItem(item.id, 'name', e.target.value)}
-                                                                placeholder="e.g. Apple"
-                                                                className="w-full rounded-xl border border-slate-700 bg-[#111827] px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-[#4CAF50]"
-                                                            />
-                                                        </div>
-                                                        <div className="col-span-2 space-y-1">
-                                                            <label className="text-xs text-slate-400">Qty</label>
-                                                            <input
-                                                                type="number"
-                                                                min="0"
-                                                                step="1"
-                                                                value={item.quantity}
-                                                                onChange={(e) => updateFoodItem(item.id, 'quantity', e.target.value)}
-                                                                className="w-full rounded-xl border border-slate-700 bg-[#111827] px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-[#4CAF50]"
-                                                            />
-                                                        </div>
-                                                        <div className="col-span-3 space-y-1">
-                                                            <label className="text-xs text-slate-400">kcal/serving</label>
-                                                            <input
-                                                                type="number"
-                                                                min="0"
-                                                                step="1"
-                                                                value={item.caloriesPerUnit}
-                                                                onChange={(e) => updateFoodItem(item.id, 'caloriesPerUnit', e.target.value)}
-                                                                className="w-full rounded-xl border border-slate-700 bg-[#111827] px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-[#4CAF50]"
-                                                            />
-                                                        </div>
-                                                        <div className="col-span-2 flex justify-end">
-                                                            <button type="button" onClick={() => removeFoodItem(item.id)} className="rounded-xl bg-red-600 px-3 py-2 text-sm font-medium text-white hover:bg-red-500">Remove</button>
-                                                        </div>
-                                                    </div>
-                                                ))}
-                                                <div className="flex flex-wrap gap-3 items-center justify-between">
-                                                    <button type="button" onClick={addFoodItem} className="rounded-xl bg-slate-700 px-4 py-3 text-sm font-medium text-white hover:bg-slate-600">Add Another Food</button>
-                                                    <span className="text-sm text-slate-300">Estimated total calories: {foodItems.reduce((sum, item) => sum + (Number(item.quantity) * Number(item.caloriesPerUnit || 0)), 0)} kcal</span>
-                                                </div>
-                                                <div className="flex items-center gap-3">
-                                                    <button type="submit" className="flex-1 rounded-xl bg-[#4CAF50] px-4 py-3 text-sm font-medium text-white hover:bg-[#43a047]">Save Calories</button>
-                                                    <button type="button" onClick={() => setShowFoodModal(false)} className="flex-1 rounded-xl border border-slate-600 px-4 py-3 text-sm font-medium text-slate-200 hover:bg-slate-800">Cancel</button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                )}
                                 </motion.div>
                             </div>
                         </div>
                     </div>
                 </div>
             </main>
+
+            {showFoodModal && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm" style={{ pointerEvents: 'auto' }}>
+                    <div className="w-full max-w-2xl rounded-3xl bg-[#0f172a] border border-slate-700 p-6 shadow-2xl relative">
+                        <div className="flex items-center justify-between mb-4">
+                            <div>
+                                <h3 className="text-lg font-bold">Food Calories Calculator</h3>
+                                <p className="text-sm text-slate-400">Enter what you ate, quantity, and calories per serving.</p>
+                            </div>
+                            <button type="button" onClick={() => setShowFoodModal(false)} className="text-slate-300 hover:text-white bg-slate-800 p-2 rounded-full hover:bg-slate-700 transition">
+                                <X size={20} />
+                            </button>
+                        </div>
+                        <form onSubmit={handleFoodSubmit} className="space-y-4">
+                            {foodItems.map((item, index) => (
+                                <div key={item.id} className="grid grid-cols-12 gap-2 items-end">
+                                    <div className="col-span-5 space-y-1">
+                                        <label className="text-xs text-slate-400">Food Item</label>
+                                        <input
+                                            type="text"
+                                            value={item.name}
+                                            onChange={(e) => updateFoodItem(item.id, 'name', e.target.value)}
+                                            placeholder="e.g. Apple"
+                                            className="w-full rounded-xl border border-slate-700 bg-[#111827] px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-[#4CAF50]"
+                                        />
+                                    </div>
+                                    <div className="col-span-2 space-y-1">
+                                        <label className="text-xs text-slate-400">Qty</label>
+                                        <input
+                                            type="number"
+                                            min="0"
+                                            step="1"
+                                            value={item.quantity}
+                                            onChange={(e) => updateFoodItem(item.id, 'quantity', e.target.value)}
+                                            className="w-full rounded-xl border border-slate-700 bg-[#111827] px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-[#4CAF50]"
+                                        />
+                                    </div>
+                                    <div className="col-span-3 space-y-1">
+                                        <label className="text-xs text-slate-400">kcal/serving</label>
+                                        <input
+                                            type="number"
+                                            min="0"
+                                            step="1"
+                                            value={item.caloriesPerUnit}
+                                            onChange={(e) => updateFoodItem(item.id, 'caloriesPerUnit', e.target.value)}
+                                            className="w-full rounded-xl border border-slate-700 bg-[#111827] px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-[#4CAF50]"
+                                        />
+                                    </div>
+                                    <div className="col-span-2 flex justify-end">
+                                        <button type="button" onClick={() => removeFoodItem(item.id)} className="w-full rounded-xl bg-red-600/20 text-red-500 border border-red-500/30 px-3 py-2 text-sm font-medium hover:bg-red-500 hover:text-white transition">Remove</button>
+                                    </div>
+                                </div>
+                            ))}
+                            <div className="flex flex-wrap gap-3 items-center justify-between mt-4">
+                                <button type="button" onClick={addFoodItem} className="rounded-xl bg-slate-700/50 border border-slate-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-slate-600 transition flex items-center gap-2">
+                                    <Plus size={16} /> Add Food
+                                </button>
+                                <span className="text-sm font-medium text-slate-300 bg-slate-800/50 px-4 py-2.5 rounded-xl border border-slate-700">Total: <span className="text-[#4CAF50] font-bold text-base">{foodItems.reduce((sum, item) => sum + (Number(item.quantity) * Number(item.caloriesPerUnit || 0)), 0)} kcal</span></span>
+                            </div>
+                            <div className="flex items-center gap-3 pt-4 mt-4 border-t border-slate-700">
+                                <button type="submit" className="flex-1 rounded-xl bg-gradient-to-r from-[#4CAF50] to-[#2196F3] px-4 py-3 text-sm font-bold text-white hover:opacity-90 transition">Save Calories</button>
+                                <button type="button" onClick={() => setShowFoodModal(false)} className="flex-1 rounded-xl border border-slate-600 px-4 py-3 text-sm font-medium text-slate-200 hover:bg-slate-800 transition">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
 
             <AIDoctor />
         </div>
